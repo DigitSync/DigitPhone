@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DigitPhone Pro Max</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent; }
+        
+        /* Wallpaper Transition */
+        #wallpaper-layer { transition: background-image 0.5s ease-in-out; }
+
+        /* Glass Effects */
+        .glass { background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .glass-dark { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        
+        /* Animations */
+        .app-icon { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); transition: transform 0.1s; }
+        .app-icon:active { transform: scale(0.9); filter: brightness(0.8); }
+        
+        #control-center { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform; }
+        
+        /* Widget Ad Fade Animation */
+        .fade-enter { opacity: 0; }
+        .fade-enter-active { opacity: 1; transition: opacity 0.5s ease-in; }
+        
+        /* App Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px 10px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            overflow-y: auto;
+            max-height: 75vh;
+            padding-bottom: 130px;
+        }
+        .app-grid::-webkit-scrollbar { display: none; }
+        @media (min-width: 768px) { .app-grid { grid-template-columns: repeat(6, 1fr); max-width: 800px; gap: 40px 30px; } }
+
+        /* Modals */
+        .app-modal { transition: transform 0.3s ease, opacity 0.3s ease; transform: scale(0.95); opacity: 0; pointer-events: none; }
+        .app-modal.active { transform: scale(1); opacity: 1; pointer-events: all; }
+        
+        /* Utilities */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="h-screen w-screen relative overflow-hidden text-white bg-black">
+
+    <!-- 1. WALLPAPER LAYER -->
+    <div id="wallpaper-layer" class="absolute inset-0 z-0 bg-cover bg-center" 
+         style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564');">
+    </div>
+
+    <!-- 2. STATUS BAR (Click triggers Control Center) -->
+    <div onclick="toggleControlCenter()" class="relative z-20 flex justify-between items-center px-6 py-2 text-sm font-medium cursor-pointer bg-gradient-to-b from-black/60 to-transparent backdrop-blur-sm">
+        <div id="clock-display">12:00</div>
+        <div class="flex gap-2 items-center">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- 3. CONTROL CENTER (Hidden by default) -->
+    <div id="control-center" class="fixed top-0 left-0 right-0 min-h-[70vh] glass-dark z-50 rounded-b-[40px] transform -translate-y-full p-6 flex flex-col gap-6 pt-14 shadow-2xl border-b border-gray-700">
+        <div class="w-12 h-1.5 bg-gray-500/50 rounded-full mx-auto mb-2"></div>
+        <h2 class="text-xl font-bold px-1">Control Center</h2>
+        
+        <!-- Toggles -->
+        <div class="grid grid-cols-2 gap-4">
+            <div onclick="this.classList.toggle('bg-blue-600'); this.classList.toggle('bg-gray-700')" class="bg-blue-600 p-4 rounded-2xl flex flex-col gap-2 cursor-pointer transition-colors">
+                <i class="fas fa-wifi text-white text-2xl"></i>
+                <span class="font-medium">Wi-Fi</span>
+            </div>
+            <div onclick="this.classList.toggle('bg-blue-600'); this.classList.toggle('bg-gray-700')" class="bg-blue-600 p-4 rounded-2xl flex flex-col gap-2 cursor-pointer transition-colors">
+                <i class="fab fa-bluetooth-b text-white text-2xl"></i>
+                <span class="font-medium">Bluetooth</span>
+            </div>
+        </div>
+
+        <!-- Wallpaper Switcher (RESTORED) -->
+        <div>
+            <h3 class="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wider">Wallpapers</h3>
+            <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                <div onclick="setWallpaper('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80')" class="w-20 h-32 flex-shrink-0 rounded-xl bg-cover border-2 border-white cursor-pointer hover:scale-105 transition" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80')"></div>
+                <div onclick="setWallpaper('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80')" class="w-20 h-32 flex-shrink-0 rounded-xl bg-cover border border-transparent cursor-pointer hover:scale-105 transition" style="background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80')"></div>
+                <div onclick="setWallpaper('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80')" class="w-20 h-32 flex-shrink-0 rounded-xl bg-cover border border-transparent cursor-pointer hover:scale-105 transition" style="background-image: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80')"></div>
+                <div onclick="setWallpaper('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80')" class="w-20 h-32 flex-shrink-0 rounded-xl bg-cover border border-transparent cursor-pointer hover:scale-105 transition" style="background-image: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80')"></div>
+            </div>
+        </div>
+
+        <button onclick="toggleControlCenter()" class="mt-auto w-full bg-white/10 py-3 rounded-xl font-semibold backdrop-blur-md active:bg-white/20">Close</button>
+    </div>
+
+    <!-- 4. MAIN SCREEN -->
+    <main class="relative z-10 h-full flex flex-col pt-2">
+        
+        <!-- Search Widget -->
+        <div class="mx-6 mb-2 z-30">
+            <div class="glass rounded-full px-4 py-2.5 flex items-center gap-3 shadow-lg">
+                <i class="fab fa-google text-white/80"></i>
+                <input type="text" id="search-input" placeholder="Search Google..." class="bg-transparent border-none outline-none text-white placeholder-white/60 w-full text-sm font-medium" onkeydown="if(event.key === 'Enter') executeSearch()">
+                <i class="fas fa-search text-white/80 cursor-pointer" onclick="executeSearch()"></i>
+            </div>
+        </div>
+
+        <!-- Apps Container -->
+        <div class="app-grid" id="app-container">
+            
+            <!-- ROTATING AD WIDGET (Top) -->
+            <div id="ad-widget" class="col-span-4 md:col-span-3 h-44 rounded-2xl relative overflow-hidden shadow-lg group cursor-pointer transform transition hover:scale-[1.02]" onclick="openAdLink()">
+                <img id="ad-img" src="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-4">
+                    <span class="bg-white/20 backdrop-blur w-fit px-2 py-0.5 rounded text-[10px] font-bold mb-1">SPONSORED</span>
+                    <h3 id="ad-title" class="font-bold text-lg leading-tight">Loading...</h3>
+                    <p id="ad-sub" class="text-gray-300 text-xs mt-0.5">Please wait</p>
+                </div>
+            </div>
+            
+            <!-- Apps injected by JS -->
+        </div>
+    </main>
+
+    <!-- 5. DOCK (Bottom Shortcuts) -->
+    <div class="fixed bottom-4 left-4 right-4 h-24 glass rounded-[35px] flex justify-around items-center px-2 z-40 max-w-xl mx-auto backdrop-blur-xl border border-white/20 shadow-2xl">
+        <!-- Dock items injected by JS -->
+    </div>
+
+    <!-- === APPS (Modals) === -->
+
+    <!-- Calculator -->
+    <div id="app-calculator" class="app-modal fixed inset-0 z-[60] bg-black flex flex-col">
+        <div class="flex-1 flex flex-col justify-end p-6 pb-12">
+            <div id="calc-display" class="text-right text-6xl font-light mb-6 truncate">0</div>
+            <div class="grid grid-cols-4 gap-4">
+                <button onclick="calcClear()" class="h-16 rounded-full bg-gray-400 text-black text-xl font-bold">AC</button>
+                <button onclick="calcInput('/')" class="h-16 rounded-full bg-gray-800 text-white text-xl"><i class="fas fa-divide"></i></button>
+                <button onclick="calcInput('*')" class="h-16 rounded-full bg-gray-800 text-white text-xl"><i class="fas fa-times"></i></button>
+                <button onclick="calcInput('-')" class="h-16 rounded-full bg-orange-500 text-white text-xl"><i class="fas fa-minus"></i></button>
+                
+                <button onclick="calcInput('7')" class="h-16 rounded-full bg-gray-800 text-xl">7</button>
+                <button onclick="calcInput('8')" class="h-16 rounded-full bg-gray-800 text-xl">8</button>
+                <button onclick="calcInput('9')" class="h-16 rounded-full bg-gray-800 text-xl">9</button>
+                <button onclick="calcInput('+')" class="h-16 rounded-full bg-orange-500 text-white text-xl"><i class="fas fa-plus"></i></button>
+                
+                <button onclick="calcInput('4')" class="h-16 rounded-full bg-gray-800 text-xl">4</button>
+                <button onclick="calcInput('5')" class="h-16 rounded-full bg-gray-800 text-xl">5</button>
+                <button onclick="calcInput('6')" class="h-16 rounded-full bg-gray-800 text-xl">6</button>
+                <button onclick="calcResult()" class="h-16 rounded-full bg-orange-500 text-white text-xl row-span-2 flex items-center justify-center"><i class="fas fa-equals"></i></button>
+                
+                <button onclick="calcInput('1')" class="h-16 rounded-full bg-gray-800 text-xl">1</button>
+                <button onclick="calcInput('2')" class="h-16 rounded-full bg-gray-800 text-xl">2</button>
+                <button onclick="calcInput('3')" class="h-16 rounded-full bg-gray-800 text-xl">3</button>
+                
+                <button onclick="calcInput('0')" class="h-16 rounded-full bg-gray-800 text-xl col-span-2 w-full">0</button>
+                <button onclick="calcInput('.')" class="h-16 rounded-full bg-gray-800 text-xl">.</button>
+            </div>
+        </div>
+        <div onclick="closeAllApps()" class="h-12 w-full flex items-center justify-center cursor-pointer bg-black"><div class="w-32 h-1.5 bg-white rounded-full"></div></div>
+    </div>
+
+    <!-- Notes -->
+    <div id="app-notes" class="app-modal fixed inset-0 z-[60] bg-[#1c1c1e] flex flex-col text-white">
+        <div class="h-16 flex items-center justify-between px-4 border-b border-gray-800 bg-[#1c1c1e]">
+            <span onclick="closeAllApps()" class="text-orange-400 font-medium cursor-pointer"><i class="fas fa-chevron-left"></i> Back</span>
+            <span class="font-bold text-lg">Notes</span>
+            <span onclick="saveNotes()" class="text-orange-400 font-medium cursor-pointer">Done</span>
+        </div>
+        <textarea id="notes-area" class="flex-1 bg-transparent p-6 text-lg outline-none resize-none placeholder-gray-500" placeholder="Type here..."></textarea>
+    </div>
+
+    <script>
+        // --- 1. CONFIGURATION ---
+        
+        // ADS ARRAY (Yahan apne aur ads add karo)
+        const ads = [
+            {
+                title: "DigitMart Big Sale",
+                sub: "50% Off on Mobile Accessories",
+                img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=800",
+                link: "https://mybillbook.in/store/digitmart"
+            },
+            {
+                title: "Repair Services",
+                sub: "Fast & Reliable Mobile Repair",
+                img: "https://images.unsplash.com/photo-1581092921461-eab62e97a783?q=80&w=800",
+                link: "#"
+            },
+            {
+                title: "New Gadgets",
+                sub: "Check out latest arrivals",
+                img: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=800",
+                link: "#"
+            }
+        ];
+
+        // APPS LIST (Is_Brand flag added for correct icons)
+        const apps = [
+            { name: 'Instagram', icon: 'fa-instagram', isBrand: true, color: 'bg-gradient-to-br from-purple-500 to-pink-500', type: 'link', url: 'https://www.instagram.com/digitmartonline?igsh=YW81ZTE4NGY1Nzdu' },
+            { name: 'YouTube', icon: 'fa-youtube', isBrand: true, color: 'bg-white', iconColor: 'text-red-600', type: 'link', url: 'https://youtube.com/@fearlesshacker?si=4oUBkcJHPEEKIaZt' },
+            { name: 'Gmail', icon: 'fa-envelope', isBrand: false, color: 'bg-gray-200', iconColor: 'text-red-500', type: 'link', url: 'mailto:thedigitsync@gmail.com' },
+            { name: 'Pinterest', icon: 'fa-pinterest', isBrand: true, color: 'bg-red-600', type: 'link', url: 'https://pin.it/35x1Igr0V' },
+            { name: 'Bill Book', icon: 'fa-file-invoice-dollar', isBrand: false, color: 'bg-green-500', type: 'link', url: 'https://mybillbook.in/store/digitmart' },
+            { name: 'Calculator', icon: 'fa-calculator', isBrand: false, color: 'bg-gray-800', iconColor: 'text-orange-500', type: 'app', id: 'calculator' },
+            { name: 'Notes', icon: 'fa-sticky-note', isBrand: false, color: 'bg-yellow-400', type: 'app', id: 'notes' },
+            { name: 'DigitMart', icon: 'fa-store', isBrand: false, color: 'bg-blue-600', type: 'link', url: 'https://mybillbook.in/store/digitmart' },
+            { name: 'Settings', icon: 'fa-cog', isBrand: false, color: 'bg-gray-500', type: 'action', action: 'toggleControlCenter' }
+        ];
+
+        const dockApps = [
+            { icon: 'fa-phone', isBrand: false, color: 'bg-green-500', action: "alert('Calling Feature')" },
+            { icon: 'fa-map-marker-alt', isBrand: false, color: 'bg-blue-500', url: 'https://maps.app.goo.gl/zsciQzhwYcU4MYUN9' },
+            { icon: 'fa-whatsapp', isBrand: true, color: 'bg-green-600', url: 'https://wa.me/message/PERTKXM4MMF2K1' },
+            { icon: 'fa-globe', isBrand: false, color: 'bg-blue-400', url: 'https://thedigitsync.blogspot.com/' }
+        ];
+
+        // --- 2. LOGIC ---
+
+        // Render Apps
+        function renderApps() {
+            const container = document.getElementById('app-container');
+            // Keep the ad widget, remove others if re-rendering
+            // Logic: Append to end
+            apps.forEach(app => {
+                const div = document.createElement('div');
+                div.className = 'flex flex-col items-center gap-1 group cursor-pointer active:scale-95 transition-transform';
+                
+                let action = '';
+                if(app.type === 'link') action = `window.open('${app.url}', '_blank')`;
+                else if(app.type === 'app') action = `openApp('${app.id}')`;
+                else if(app.type === 'action') action = `${app.action}()`;
+
+                // Fix Icon Class (fab vs fas)
+                const iconClass = app.isBrand ? `fab ${app.icon}` : `fas ${app.icon}`;
+                
+                div.innerHTML = `
+                    <div onclick="${action}" class="app-icon w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center ${app.color} text-2xl overflow-hidden relative">
+                        <i class="${iconClass} ${app.iconColor || 'text-white'}"></i>
+                    </div>
+                    <span class="text-xs font-medium drop-shadow-md text-center text-white">${app.name}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderDock() {
+            const container = document.querySelector('.fixed.bottom-4');
+            dockApps.forEach(app => {
+                const div = document.createElement('div');
+                let action = app.url ? `window.open('${app.url}', '_blank')` : app.action;
+                const iconClass = app.isBrand ? `fab ${app.icon}` : `fas ${app.icon}`;
+                
+                div.innerHTML = `
+                    <div onclick="${action}" class="app-icon w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center ${app.color} cursor-pointer hover:-translate-y-2 transition-transform duration-200">
+                        <i class="${iconClass} ${app.iconColor || 'text-white'} text-2xl"></i>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Ad Rotation Logic
+        let currentAdIndex = 0;
+        function rotateAds() {
+            const ad = ads[currentAdIndex];
+            const imgEl = document.getElementById('ad-img');
+            const titleEl = document.getElementById('ad-title');
+            const subEl = document.getElementById('ad-sub');
+            
+            // Fade effect
+            imgEl.style.opacity = 0.5; 
+            setTimeout(() => {
+                imgEl.src = ad.img;
+                titleEl.innerText = ad.title;
+                subEl.innerText = ad.sub;
+                imgEl.style.opacity = 1;
+            }, 300);
+
+            currentAdIndex = (currentAdIndex + 1) % ads.length;
+        }
+
+        function openAdLink() {
+            // Open previous ad index because it incremented
+            let idx = currentAdIndex === 0 ? ads.length - 1 : currentAdIndex - 1;
+            const url = ads[idx].link;
+            if(url !== '#') window.open(url, '_blank');
+        }
+
+        // Initialize
+        renderApps();
+        renderDock();
+        rotateAds(); // Show first ad
+        setInterval(rotateAds, 4000); // Change every 4 seconds
+
+        // System Functions
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock-display').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function toggleControlCenter() {
+            const cc = document.getElementById('control-center');
+            cc.classList.toggle('-translate-y-full');
+        }
+
+        function setWallpaper(url) {
+            document.getElementById('wallpaper-layer').style.backgroundImage = `url('${url}')`;
+        }
+
+        function executeSearch() {
+            const q = document.getElementById('search-input').value;
+            if(q) window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, '_blank');
+        }
+
+        // Internal Apps
+        function openApp(id) {
+            document.getElementById(`app-${id}`).classList.add('active');
+            if(id === 'notes') loadNotes();
+        }
+        function closeAllApps() {
+            document.querySelectorAll('.app-modal').forEach(el => el.classList.remove('active'));
+        }
+
+        // Calculator
+        let cVal = '';
+        function calcInput(v) { cVal += v; document.getElementById('calc-display').innerText = cVal; }
+        function calcClear() { cVal = ''; document.getElementById('calc-display').innerText = '0'; }
+        function calcResult() { 
+            try { cVal = eval(cVal).toString(); } catch { cVal = 'Error'; } 
+            document.getElementById('calc-display').innerText = cVal; 
+        }
+
+        // Notes
+        function loadNotes() { document.getElementById('notes-area').value = localStorage.getItem('digitNotes') || ''; }
+        function saveNotes() { 
+            localStorage.setItem('digitNotes', document.getElementById('notes-area').value); 
+            closeAllApps(); 
+        }
+
+    </script>
+</body>
+</html>
