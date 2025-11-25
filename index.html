@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DigitPhone Final Polished</title>
+    <title>DigitPhone Final</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -22,36 +22,35 @@
         /* Animations */
         .app-icon { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
         .app-icon:active { transform: scale(0.9); filter: brightness(0.8); }
+        
         .app-modal { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s; transform: scale(0.95) translateY(20px); opacity: 0; pointer-events: none; }
         .app-modal.active { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
+        
         #control-center { transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform; }
 
-        /* Grid Layout */
+        /* App Grid */
         .app-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px 10px;
-            padding: 20px;
+            padding: 0 20px 20px 20px;
             width: 100%; 
             margin: 0 auto;
             overflow-y: auto;
-            max-height: 75vh;
+            max-height: 65vh;
             padding-bottom: 140px;
         }
         .app-grid::-webkit-scrollbar { display: none; }
         .is-landscape .app-grid { grid-template-columns: repeat(6, 1fr); }
 
-        /* Dialer Keypad Realistic */
+        /* Dialer Keypad */
         .dial-key { @apply w-20 h-20 rounded-full bg-[#333] flex flex-col items-center justify-center active:bg-[#555] transition-colors cursor-pointer text-white; }
-        .dial-num { @apply text-3xl font-medium; } 
-        .dial-sub { @apply text-[10px] font-bold text-gray-400 -mt-1 tracking-widest; }
+        .dial-num { @apply text-4xl font-normal; } 
         
         /* Chat */
-        .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 18px; margin-bottom: 8px; font-size: 15px; }
-        .chat-user { background: #007AFF; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .chat-ai { background: #262628; color: white; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .wa-item:active { background-color: rgba(255,255,255,0.05); }
         
-        /* Torch Overlay (Click to Close) */
+        /* Torch Overlay */
         #torch-overlay { pointer-events: none; opacity: 0; transition: opacity 0.3s; mix-blend-mode: overlay; }
         .torch-active { opacity: 1 !important; background-color: white; mix-blend-mode: normal !important; pointer-events: auto !important; cursor: pointer; }
 
@@ -60,7 +59,7 @@
 </head>
 <body id="main-body" class="h-screen w-screen relative overflow-hidden text-white bg-black transition-transform duration-500">
 
-    <!-- TORCH LAYER (Tap to Turn Off) -->
+    <!-- TORCH LAYER -->
     <div id="torch-overlay" class="absolute inset-0 z-[100] bg-white" onclick="toggleTorch()"></div>
 
     <!-- 1. WALLPAPER -->
@@ -72,31 +71,33 @@
         <div class="flex gap-2 items-center text-xs">
             <i class="fas fa-signal"></i>
             <i class="fas fa-wifi"></i>
-            <i class="fas fa-battery-full text-lg"></i>
         </div>
     </div>
 
     <!-- 3. CONTROL CENTER -->
     <div id="control-center" class="fixed top-0 left-0 right-0 min-h-[75vh] glass-dark z-50 rounded-b-[40px] transform -translate-y-full p-6 flex flex-col gap-5 pt-16 shadow-2xl border-b border-gray-700/50 overflow-y-auto">
-        <div class="w-14 h-1.5 bg-gray-500/30 rounded-full mx-auto mb-2" onclick="toggleControlCenter()"></div>
         <div class="flex justify-between items-center px-2">
             <h2 class="text-2xl font-bold">Control Center</h2>
             <button onclick="toggleControlCenter()" class="text-sm bg-white/10 px-3 py-1 rounded-full">Close</button>
         </div>
         
         <div class="grid grid-cols-2 gap-4">
+            <!-- Torch -->
             <div onclick="toggleTorch()" id="btn-torch" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-2 cursor-pointer transition-colors duration-300 active:scale-95">
                 <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><i class="fas fa-flashlight text-2xl"></i></div>
                 <span class="font-medium">Torch</span>
             </div>
+            <!-- Fullscreen -->
             <div onclick="toggleFullScreen()" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-2 cursor-pointer transition-colors duration-300 active:scale-95">
                 <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><i class="fas fa-expand text-2xl"></i></div>
                 <span class="font-medium">Full Screen</span>
             </div>
+            <!-- Rotation -->
             <div onclick="toggleRotation()" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-2 cursor-pointer transition-colors duration-300 active:scale-95">
                 <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><i class="fas fa-sync-alt text-2xl"></i></div>
                 <span class="font-medium">Rotate UI</span>
             </div>
+            <!-- Clock -->
             <div class="bg-[#333] p-4 rounded-2xl flex flex-col justify-center gap-1 cursor-default">
                 <span class="text-xs text-gray-400 uppercase">Today</span>
                 <span class="font-bold text-xl" id="date-display">Mon, 25</span>
@@ -113,18 +114,18 @@
         <div>
             <h3 class="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider ml-1">Themes</h3>
             <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                <div onclick="setWallpaper('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border-2 border-white cursor-pointer"></div>
+                <div onclick="setWallpaper('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border-2 border-white cursor-pointer" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80')"></div>
                 <div onclick="setWallpaper('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border border-white/20 cursor-pointer" style="background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80')"></div>
                 <div onclick="setWallpaper('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border border-white/20 cursor-pointer" style="background-image: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80')"></div>
                 <div onclick="setWallpaper('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border border-white/20 cursor-pointer" style="background-image: url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80')"></div>
             </div>
         </div>
-        <button onclick="toggleControlCenter()" class="mt-auto w-full bg-white/10 py-4 rounded-2xl font-bold backdrop-blur-md active:bg-white/20">Close Center</button>
     </div>
 
     <!-- 4. MAIN SCREEN -->
     <main class="relative z-10 h-full flex flex-col pt-2">
-        <div class="mx-4 mb-2 z-30">
+        <!-- Search -->
+        <div class="mx-4 mb-3 z-30">
             <div class="glass rounded-2xl px-4 py-3 flex items-center gap-3 shadow-lg backdrop-blur-md">
                 <i class="fab fa-google text-white/90 text-xl"></i>
                 <input type="text" id="search-input" placeholder="Search..." class="bg-transparent border-none outline-none text-white placeholder-white/70 w-full font-medium text-lg" onkeydown="if(event.key === 'Enter') executeSearch()">
@@ -132,8 +133,9 @@
             </div>
         </div>
 
-        <div class="app-grid" id="app-container">
-            <div id="ad-widget" class="col-span-4 md:col-span-3 h-48 rounded-[25px] relative overflow-hidden shadow-2xl group cursor-pointer transform transition active:scale-[0.98] border border-white/10 mb-2" onclick="openAdLink()">
+        <!-- Ad Widget (FULL LINE) -->
+        <div class="mx-4 mb-4 z-20">
+            <div id="ad-widget" class="w-full h-48 rounded-[25px] relative overflow-hidden shadow-2xl group cursor-pointer transform transition active:scale-[0.98] border border-white/10" onclick="openAdLink()">
                 <img id="ad-img" src="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6">
                     <span class="bg-white/20 backdrop-blur-md w-fit px-3 py-1 rounded-full text-[10px] font-bold mb-2 border border-white/10 shadow-sm">SPONSORED</span>
@@ -141,6 +143,11 @@
                     <p id="ad-sub" class="text-gray-200 text-sm mt-1 opacity-90 font-medium">...</p>
                 </div>
             </div>
+        </div>
+
+        <!-- Apps Grid -->
+        <div class="app-grid" id="app-container">
+            <!-- Apps Injected Here -->
         </div>
     </main>
 
@@ -154,53 +161,37 @@
 
     <!-- === APPS === -->
 
-    <!-- ORINA AI (Z-Index 70 to stay above WhatsApp) -->
-    <div id="app-orina" class="app-modal fixed inset-0 z-[70] bg-[#000] flex flex-col text-white">
-        <div class="h-16 flex items-center justify-between px-4 border-b border-white/10 bg-[#111]">
-            <span onclick="closeAllApps()" class="text-blue-500 font-medium cursor-pointer flex items-center gap-1 text-lg"><i class="fas fa-chevron-left"></i> Back</span>
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-xs font-bold">AI</div>
-                <span class="font-bold text-xl">Orina</span>
-            </div>
-            <i class="fas fa-ellipsis-h text-gray-500"></i>
+    <!-- ORINA (RagmyAI Integration) -->
+    <div id="app-orina" class="app-modal fixed inset-0 z-[70] bg-white flex flex-col text-black">
+        <div class="h-14 flex items-center justify-between px-4 bg-[#f0f2f5] border-b border-gray-300">
+            <span onclick="closeAllApps()" class="text-blue-600 font-medium cursor-pointer flex items-center gap-1 text-lg"><i class="fas fa-chevron-left"></i> Back</span>
+            <span class="font-bold text-lg">Orina AI</span>
+            <div class="w-6"></div>
         </div>
-        <div id="chat-container" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
-            <div class="chat-msg chat-ai">Hello Boss! Orina here. Main kya help karu? 🤖</div>
-        </div>
-        <div class="p-4 bg-[#111] pb-8 border-t border-white/10">
-            <div class="flex items-center gap-3 bg-[#222] rounded-full px-5 py-3">
-                <input type="text" id="ai-input" placeholder="Type a message..." class="bg-transparent flex-1 outline-none text-white placeholder-gray-500 text-lg" onkeydown="if(event.key === 'Enter') sendAIChat()">
-                <button onclick="sendAIChat()" class="w-10 h-10 flex items-center justify-center text-blue-500 hover:bg-white/5 rounded-full"><i class="fas fa-arrow-up text-2xl"></i></button>
-            </div>
+        <!-- RagmyAI Iframe -->
+        <div class="flex-1 w-full h-full overflow-hidden">
+            <iframe src="https://chat.ragmyai.com/dd520ac9-7820-4622-84be-04cacfa57c77" class="w-full h-full border-none" allow="microphone"></iframe>
         </div>
     </div>
 
-    <!-- DIALER (REALISTIC IPHONE STYLE) -->
+    <!-- DIALER -->
     <div id="app-dialer" class="app-modal fixed inset-0 z-[60] bg-black flex flex-col pb-8 text-white">
         <div class="flex-1 flex flex-col pt-16 justify-center">
-            <!-- Display -->
             <div id="dialer-display" class="text-5xl font-light mb-8 h-20 text-center w-full px-4 truncate tracking-wider text-white"></div>
-            
-            <!-- Keypad (Standard Realistic) -->
             <div class="grid grid-cols-3 gap-x-6 gap-y-5 px-8 mb-10 max-w-sm mx-auto w-full justify-items-center">
-                <div class="dial-key" onclick="dial('1')"><div class="flex flex-col items-center"><span class="dial-num">1</span><span class="dial-sub opacity-0">_</span></div></div>
-                <div class="dial-key" onclick="dial('2')"><div class="flex flex-col items-center"><span class="dial-num">2</span><span class="dial-sub">ABC</span></div></div>
-                <div class="dial-key" onclick="dial('3')"><div class="flex flex-col items-center"><span class="dial-num">3</span><span class="dial-sub">DEF</span></div></div>
-                
-                <div class="dial-key" onclick="dial('4')"><div class="flex flex-col items-center"><span class="dial-num">4</span><span class="dial-sub">GHI</span></div></div>
-                <div class="dial-key" onclick="dial('5')"><div class="flex flex-col items-center"><span class="dial-num">5</span><span class="dial-sub">JKL</span></div></div>
-                <div class="dial-key" onclick="dial('6')"><div class="flex flex-col items-center"><span class="dial-num">6</span><span class="dial-sub">MNO</span></div></div>
-                
-                <div class="dial-key" onclick="dial('7')"><div class="flex flex-col items-center"><span class="dial-num">7</span><span class="dial-sub">PQRS</span></div></div>
-                <div class="dial-key" onclick="dial('8')"><div class="flex flex-col items-center"><span class="dial-num">8</span><span class="dial-sub">TUV</span></div></div>
-                <div class="dial-key" onclick="dial('9')"><div class="flex flex-col items-center"><span class="dial-num">9</span><span class="dial-sub">WXYZ</span></div></div>
-                
+                <div class="dial-key" onclick="dial('1')"><span class="dial-num">1</span></div>
+                <div class="dial-key" onclick="dial('2')"><span class="dial-num">2</span></div>
+                <div class="dial-key" onclick="dial('3')"><span class="dial-num">3</span></div>
+                <div class="dial-key" onclick="dial('4')"><span class="dial-num">4</span></div>
+                <div class="dial-key" onclick="dial('5')"><span class="dial-num">5</span></div>
+                <div class="dial-key" onclick="dial('6')"><span class="dial-num">6</span></div>
+                <div class="dial-key" onclick="dial('7')"><span class="dial-num">7</span></div>
+                <div class="dial-key" onclick="dial('8')"><span class="dial-num">8</span></div>
+                <div class="dial-key" onclick="dial('9')"><span class="dial-num">9</span></div>
                 <div class="dial-key" onclick="dial('*')"><span class="dial-num text-4xl pt-2">*</span></div>
-                <div class="dial-key" onclick="dial('0')"><div class="flex flex-col items-center"><span class="dial-num">0</span><span class="dial-sub">+</span></div></div>
-                <div class="dial-key !bg-transparent active:!bg-transparent" onclick="dialBackspace()"><i class="fas fa-backspace text-2xl text-gray-400"></i></div>
+                <div class="dial-key" onclick="dial('0')"><span class="dial-num">0</span></div>
+                <div class="dial-key !bg-transparent active:!bg-transparent" onclick="dialBackspace()"><i class="fas fa-backspace text-3xl text-gray-400"></i></div>
             </div>
-
-            <!-- Action Buttons -->
             <div class="flex justify-center gap-6 items-center px-6 w-full max-w-md mx-auto">
                  <div onclick="waDirectMsgFromDialer()" class="w-16 h-16 rounded-full bg-[#25D366] flex items-center justify-center cursor-pointer active:scale-95 transition shadow-lg">
                     <i class="fab fa-whatsapp text-white text-3xl"></i>
@@ -210,8 +201,6 @@
                  </div>
             </div>
         </div>
-        
-        <!-- Close Bar -->
         <div onclick="closeAllApps()" class="h-14 w-full flex items-center justify-center cursor-pointer mt-auto bg-black"><div class="w-36 h-1.5 bg-white rounded-full"></div></div>
     </div>
 
@@ -278,17 +267,10 @@
             <span onclick="closeAllApps()" class="text-orange-400 font-medium cursor-pointer flex items-center gap-1"><i class="fas fa-chevron-left"></i> Notes</span>
             <span onclick="saveNotes()" class="text-orange-400 font-medium cursor-pointer">Done</span>
         </div>
-        <div class="px-4 py-3 bg-[#2c2c2e] flex gap-3">
-            <button onclick="magicNote('fix')" class="px-4 py-1.5 bg-purple-500/20 text-purple-300 rounded-lg text-sm font-medium flex items-center gap-2"><i class="fas fa-magic"></i> Professional</button>
-            <button onclick="magicNote('short')" class="px-4 py-1.5 bg-blue-500/20 text-blue-300 rounded-lg text-sm font-medium flex items-center gap-2"><i class="fas fa-compress-alt"></i> Summarize</button>
-        </div>
-        <div id="notes-loader" class="hidden px-4 py-1 text-xs text-gray-400 italic">DigitAI is writing...</div>
         <textarea id="notes-area" class="flex-1 bg-transparent p-6 text-lg outline-none resize-none placeholder-gray-500 font-sans" placeholder="Start typing..."></textarea>
     </div>
 
     <script>
-        const apiKey = ""; 
-
         // 1. ADS CONFIG
         const ads = [
             { title: "DigitMart Sale", sub: "50% Off Accessories", img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=800", link: "https://mybillbook.in/store/digitmart" },
@@ -297,7 +279,7 @@
 
         // 2. APPS LIST
         const apps = [
-            { name: 'ShopBook', icon: 'fa-receipt', color: 'bg-gradient-to-br from-orange-500 to-red-600', type: 'link', url: 'https://digitsync.github.io/Print-receipt/' },
+            { name: 'ShopBook', icon: 'fa-receipt', color: 'bg-gradient-to-br from-orange-500 to-red-600', type: 'link', url: 'https://digitsync.github.io/DigitBook/' },
             { name: 'Typing', icon: 'fa-keyboard', color: 'bg-gradient-to-br from-emerald-500 to-green-700', type: 'link', url: 'https://digitsync.github.io/Typing-master-Pro/' },
             { name: 'QRCode', icon: 'fa-qrcode', color: 'bg-gradient-to-br from-gray-800 to-black', type: 'link', url: 'https://digitsync.github.io/Code-Generator/' },
             { name: 'Browser', icon: 'fa-globe', color: 'bg-gradient-to-br from-blue-500 to-blue-700', type: 'link', url: 'https://thedigitsync.blogspot.com/2024/11/comprehensive-file-type-search.html' },
@@ -309,7 +291,6 @@
         const notifications = [
             { title: 'DigitMart Offer', body: 'New headphones available at 30% discount!', time: 'Now' },
             { title: 'System Update', body: 'DigitPhone OS 2.0 is ready.', time: '10m ago' },
-            { title: 'Daily Quote', body: 'Focus on improving yourself.', time: '1h ago' }
         ];
 
         // 4. WHATSAPP CONTACTS
@@ -327,23 +308,29 @@
 
         function renderApps() {
             const container = document.getElementById('app-container');
-            const adHTML = document.getElementById('ad-widget').outerHTML;
-            container.innerHTML = adHTML; 
             apps.forEach(app => {
                 const div = document.createElement('div');
                 div.className = 'flex flex-col items-center gap-2 group cursor-pointer active:scale-95 transition-transform';
-                let action = '';
-                if(app.type === 'link') action = `window.open('${app.url}', '_blank')`;
-                else if(app.type === 'app') action = `openApp('${app.id}')`;
-                
+                div.onclick = () => handleAppClick(app);
                 div.innerHTML = `
-                    <div onclick="${action}" class="app-icon w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center ${app.color} text-3xl relative overflow-hidden shadow-lg">
+                    <div class="app-icon w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center ${app.color} text-3xl relative overflow-hidden shadow-lg">
                         <i class="fas ${app.icon} ${app.icon.includes('fa-brands') ? '' : 'fab'} ${app.icon} ${app.iconColor || 'text-white'}"></i>
                     </div>
                     <span class="text-xs font-medium drop-shadow-md text-center text-white tracking-wide">${app.name}</span>
                 `;
                 container.appendChild(div);
             });
+        }
+
+        function handleAppClick(app) {
+            if (app.name === 'ShopBook') {
+                toggleFullScreen();
+                window.open(app.url, '_blank');
+            } else if (app.type === 'link') {
+                window.open(app.url, '_blank');
+            } else {
+                openApp(app.id);
+            }
         }
 
         function renderContacts() {
@@ -353,13 +340,11 @@
                 const iconType = c.isFab ? 'fab' : 'fas';
                 const div = document.createElement('div');
                 div.className = 'wa-item flex items-center gap-4 p-4 cursor-pointer border-b border-[#202c33] active:bg-[#202c33] transition-colors';
-                
                 if (c.action === 'openOrina') {
                     div.onclick = () => openApp('orina');
                 } else {
                     div.onclick = () => window.open(c.url, '_blank');
                 }
-
                 div.innerHTML = `
                     <div class="w-12 h-12 rounded-full ${c.color} flex items-center justify-center text-white text-xl flex-shrink-0">
                         <i class="${iconType} ${c.icon} ${c.iconColor || 'text-white'}"></i>
@@ -387,10 +372,6 @@
                 `;
             });
         }
-
-        // --- SYSTEM LOGIC ---
-        async function callGemini(p) { try { const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:p}]}]})});const d=await r.json();return d.candidates[0].content.parts[0].text;}catch(e){return "Net off hai Boss.";}}
-        async function sendAIChat() { const i=document.getElementById('ai-input'),c=document.getElementById('chat-container'),t=i.value.trim();if(!t)return;c.innerHTML+=`<div class="chat-msg chat-user">${t}</div>`;i.value='';c.scrollTop=c.scrollHeight;const r=await callGemini(t);c.innerHTML+=`<div class="chat-msg chat-ai">${r.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')}</div>`;c.scrollTop=c.scrollHeight;}
         
         // Calculator
         let cVal=''; function calcInput(v){cVal+=v;document.getElementById('calc-display').innerText=cVal;} function calcClear(){cVal='';document.getElementById('calc-display').innerText='0';document.getElementById('calc-history').innerText='';} function calcDel(){cVal=cVal.slice(0,-1);document.getElementById('calc-display').innerText=cVal||'0';} function calcResult(){try{document.getElementById('calc-history').innerText=cVal+' =';cVal=eval(cVal).toString();}catch{cVal='Error';}document.getElementById('calc-display').innerText=cVal;}
@@ -398,7 +379,6 @@
         function calcCustomGST(m){let r=prompt("GST %:");if(r&&!isNaN(r))calcGST(parseFloat(r),m);}
 
         // Notes
-        async function magicNote(m){const a=document.getElementById('notes-area'),l=document.getElementById('notes-loader'),v=a.value.trim();if(!v)return;l.classList.remove('hidden');const r=await callGemini(m==='fix'?`Fix text: "${v}"`:`Summarize: "${v}"`);l.classList.add('hidden');if(r)a.value=r;}
         function loadNotes(){document.getElementById('notes-area').value=localStorage.getItem('digitNotes')||'';} function saveNotes(){localStorage.setItem('digitNotes',document.getElementById('notes-area').value);closeAllApps();}
 
         // Dialer & Calls
@@ -406,14 +386,14 @@
         function waDirectMsgFromDialer(){if(dNum)window.open(`https://wa.me/${dNum}`,'_blank');}
         function waDirectMsg(){const n=document.getElementById('wa-direct-input').value;if(n)window.open(`https://wa.me/${n}`,'_blank');}
 
-        // Control Center Actions
+        // Actions
         function toggleTorch(){
             const t = document.getElementById('torch-overlay');
             const b = document.getElementById('btn-torch');
             t.classList.toggle('torch-active');
             if(t.classList.contains('torch-active')) {
                 b.classList.remove('bg-[#333]'); b.classList.add('bg-white', 'text-black');
-                document.getElementById('control-center').classList.add('-translate-y-full'); // Close menu
+                document.getElementById('control-center').classList.add('-translate-y-full');
             } else {
                 b.classList.add('bg-[#333]'); b.classList.remove('bg-white', 'text-black');
             }
@@ -424,14 +404,11 @@
         }
         function toggleRotation(){
             document.getElementById('main-body').classList.toggle('is-landscape');
-            alert("Rotation Mode: Toggled");
+            alert("Rotate device for landscape view");
         }
 
         function openApp(id){
-            if(id === 'orina') {
-                // Special case for Orina: Close WhatsApp first if open
-                document.getElementById('app-whatsapp').classList.remove('active');
-            }
+            if(id === 'orina') { document.getElementById('app-whatsapp').classList.remove('active'); }
             document.getElementById(`app-${id}`).classList.add('active');
             if(id==='notes') loadNotes();
         } 
