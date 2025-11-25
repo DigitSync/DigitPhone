@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DigitPhone Final</title>
+    <title>DigitPhone Pure</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -82,22 +82,18 @@
         </div>
         
         <div class="grid grid-cols-2 gap-4">
-            <!-- Torch -->
             <div onclick="toggleTorch()" id="btn-torch" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-2 cursor-pointer transition-colors duration-300 active:scale-95">
                 <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><i class="fas fa-flashlight text-2xl"></i></div>
                 <span class="font-medium">Torch</span>
             </div>
-            <!-- Fullscreen -->
             <div onclick="toggleFullScreen()" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-2 cursor-pointer transition-colors duration-300 active:scale-95">
                 <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><i class="fas fa-expand text-2xl"></i></div>
                 <span class="font-medium">Full Screen</span>
             </div>
-            <!-- Rotation -->
             <div onclick="toggleRotation()" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-2 cursor-pointer transition-colors duration-300 active:scale-95">
                 <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><i class="fas fa-sync-alt text-2xl"></i></div>
                 <span class="font-medium">Rotate UI</span>
             </div>
-            <!-- Clock -->
             <div class="bg-[#333] p-4 rounded-2xl flex flex-col justify-center gap-1 cursor-default">
                 <span class="text-xs text-gray-400 uppercase">Today</span>
                 <span class="font-bold text-xl" id="date-display">Mon, 25</span>
@@ -114,17 +110,16 @@
         <div>
             <h3 class="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider ml-1">Themes</h3>
             <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                <div onclick="setWallpaper('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border-2 border-white cursor-pointer" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80')"></div>
-                <div onclick="setWallpaper('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border border-white/20 cursor-pointer" style="background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80')"></div>
-                <div onclick="setWallpaper('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border border-white/20 cursor-pointer" style="background-image: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80')"></div>
-                <div onclick="setWallpaper('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border border-white/20 cursor-pointer" style="background-image: url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80')"></div>
+                <div onclick="setWallpaper('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border-2 border-white cursor-pointer"></div>
+                <div onclick="setWallpaper('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border border-white/20 cursor-pointer"></div>
+                <div onclick="setWallpaper('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border border-white/20 cursor-pointer"></div>
+                <div onclick="setWallpaper('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80')" class="w-16 h-24 flex-shrink-0 rounded-xl bg-cover border border-white/20 cursor-pointer"></div>
             </div>
         </div>
     </div>
 
     <!-- 4. MAIN SCREEN -->
     <main class="relative z-10 h-full flex flex-col pt-2">
-        <!-- Search -->
         <div class="mx-4 mb-3 z-30">
             <div class="glass rounded-2xl px-4 py-3 flex items-center gap-3 shadow-lg backdrop-blur-md">
                 <i class="fab fa-google text-white/90 text-xl"></i>
@@ -133,7 +128,6 @@
             </div>
         </div>
 
-        <!-- Ad Widget (FULL LINE) -->
         <div class="mx-4 mb-4 z-20">
             <div id="ad-widget" class="w-full h-48 rounded-[25px] relative overflow-hidden shadow-2xl group cursor-pointer transform transition active:scale-[0.98] border border-white/10" onclick="openAdLink()">
                 <img id="ad-img" src="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700">
@@ -145,7 +139,6 @@
             </div>
         </div>
 
-        <!-- Apps Grid -->
         <div class="app-grid" id="app-container">
             <!-- Apps Injected Here -->
         </div>
@@ -161,16 +154,21 @@
 
     <!-- === APPS === -->
 
-    <!-- ORINA (RagmyAI Integration) -->
-    <div id="app-orina" class="app-modal fixed inset-0 z-[70] bg-white flex flex-col text-black">
-        <div class="h-14 flex items-center justify-between px-4 bg-[#f0f2f5] border-b border-gray-300">
+    <!-- ORINA (RagmyAI with Ad Hider) -->
+    <div id="app-orina" class="app-modal fixed inset-0 z-[70] bg-black flex flex-col text-black">
+        <!-- Header White as per screenshot -->
+        <div class="h-14 flex items-center justify-between px-4 bg-white border-b border-gray-300">
             <span onclick="closeAllApps()" class="text-blue-600 font-medium cursor-pointer flex items-center gap-1 text-lg"><i class="fas fa-chevron-left"></i> Back</span>
             <span class="font-bold text-lg">Orina AI</span>
             <div class="w-6"></div>
         </div>
-        <!-- RagmyAI Iframe -->
-        <div class="flex-1 w-full h-full overflow-hidden">
+        <!-- Iframe Container -->
+        <div class="flex-1 w-full h-full overflow-hidden relative">
             <iframe src="https://chat.ragmyai.com/dd520ac9-7820-4622-84be-04cacfa57c77" class="w-full h-full border-none" allow="microphone"></iframe>
+            
+            <!-- AD HIDER LAYER -->
+            <!-- Black strip covering the bottom ad area -->
+            <div class="absolute bottom-[70px] left-0 w-full h-[60px] bg-black z-10"></div>
         </div>
     </div>
 
@@ -271,13 +269,11 @@
     </div>
 
     <script>
-        // 1. ADS CONFIG
         const ads = [
             { title: "DigitMart Sale", sub: "50% Off Accessories", img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=800", link: "https://mybillbook.in/store/digitmart" },
             { title: "Mobile Repair", sub: "Expert Service", img: "https://images.unsplash.com/photo-1581092921461-eab62e97a783?q=80&w=800", link: "#" }
         ];
 
-        // 2. APPS LIST
         const apps = [
             { name: 'ShopBook', icon: 'fa-receipt', color: 'bg-gradient-to-br from-orange-500 to-red-600', type: 'link', url: 'https://digitsync.github.io/DigitBook/' },
             { name: 'Typing', icon: 'fa-keyboard', color: 'bg-gradient-to-br from-emerald-500 to-green-700', type: 'link', url: 'https://digitsync.github.io/Typing-master-Pro/' },
@@ -287,13 +283,11 @@
             { name: 'DigitMart', icon: 'fa-store', color: 'bg-blue-600', type: 'link', url: 'https://mybillbook.in/store/digitmart' },
         ];
 
-        // 3. NOTIFICATIONS
         const notifications = [
             { title: 'DigitMart Offer', body: 'New headphones available at 30% discount!', time: 'Now' },
             { title: 'System Update', body: 'DigitPhone OS 2.0 is ready.', time: '10m ago' },
         ];
 
-        // 4. WHATSAPP CONTACTS
         const contacts = [
             { name: 'Orina (AI Assistant)', time: 'Always', msg: 'Tap to chat...', color: 'bg-gradient-to-tr from-indigo-500 to-purple-600', icon: 'fa-sparkles', action: 'openOrina' },
             { name: 'Rouf (Boss)', time: 'Online', msg: 'Call me!', color: 'bg-indigo-600', icon: 'fa-user', url: 'https://wa.me/919957189963' },
