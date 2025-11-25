@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DigitPhone OS 2.0</title>
+    <title>DigitPhone Store Fixed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
@@ -13,25 +13,23 @@
         
         /* Wallpaper */
         #wallpaper-layer { transition: transform 0.5s ease, filter 0.5s; }
-        .wallpaper-blur { filter: blur(10px) scale(1.1); }
 
         /* Screens */
-        #boot-screen { z-index: 100; transition: opacity 0.8s ease-out; }
-        #lock-screen { z-index: 90; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s; backdrop-filter: blur(10px); }
+        #boot-screen { z-index: 100; transition: opacity 0.5s ease-out; }
+        #lock-screen { z-index: 90; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s; backdrop-filter: blur(15px); }
         #lock-screen.unlocked { transform: translateY(-100%); opacity: 0; pointer-events: none; }
 
         /* Glass UI */
         .glass { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .glass-dock { background: rgba(30, 30, 30, 0.4); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .glass-panel { background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(30px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-
+        .glass-dark { background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(30px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .glass-dock { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        
         /* Animations */
-        .app-icon { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-        .app-icon:active { transform: scale(0.85); filter: brightness(0.8); }
+        .app-icon-wrapper:active { transform: scale(0.9); filter: brightness(0.8); transition: 0.1s; }
         
         .app-modal { 
-            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s; 
-            transform: scale(0.9) translateY(50px); 
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s; 
+            transform: scale(0.95) translateY(20px); 
             opacity: 0; 
             pointer-events: none; 
         }
@@ -43,12 +41,12 @@
         .app-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px 8px;
-            padding: 0 20px;
+            gap: 15px 10px;
+            padding: 0 20px 20px 20px;
             width: 100%; 
             margin: 0 auto;
             overflow-y: auto;
-            max-height: 68vh;
+            max-height: 65vh;
             padding-bottom: 140px;
         }
         .app-grid::-webkit-scrollbar { display: none; }
@@ -61,18 +59,25 @@
         /* Torch Overlay */
         #torch-overlay { pointer-events: none; opacity: 0; transition: opacity 0.2s; mix-blend-mode: overlay; }
         .torch-active { opacity: 1 !important; background-color: white; mix-blend-mode: normal !important; pointer-events: auto !important; cursor: pointer; }
+
+        /* Store UI */
+        .store-card { @apply bg-[#2c2c2e] p-3 rounded-2xl flex flex-col items-center gap-2 border border-white/5 shadow-lg hover:bg-[#3a3a3c] transition; }
+        .store-icon { @apply w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-1; }
+        .store-btn { @apply w-full py-1.5 rounded-full text-xs font-bold transition-all active:scale-95; }
+        .btn-get { @apply bg-blue-600 text-white hover:bg-blue-500; }
+        .btn-open { @apply bg-[#333] text-gray-300 border border-white/20; }
+        .store-input { @apply w-full bg-[#1c1c1e] text-white p-3 rounded-xl border border-gray-700 focus:border-blue-500 outline-none text-sm; }
     </style>
 </head>
-<body id="main-body" class="h-screen w-screen relative overflow-hidden text-white">
+<body id="main-body" class="h-screen w-screen relative overflow-hidden text-white bg-black transition-transform duration-500">
 
     <!-- 0. TORCH LAYER -->
     <div id="torch-overlay" class="absolute inset-0 z-[110] bg-white" onclick="toggleTorch()"></div>
 
     <!-- 1. BOOT SCREEN -->
     <div id="boot-screen" class="absolute inset-0 bg-black flex flex-col items-center justify-center">
-        <i class="fas fa-mobile-alt text-6xl text-white mb-4 animate-pulse"></i>
+        <i class="fas fa-fingerprint text-6xl text-blue-500 mb-4 animate-pulse"></i>
         <h1 class="text-2xl font-bold tracking-widest">DigitPhone</h1>
-        <p class="text-xs text-gray-500 mt-2">Powered by Rouf</p>
     </div>
 
     <!-- 2. LOCK SCREEN -->
@@ -84,7 +89,7 @@
         </div>
         <div class="mt-auto flex flex-col items-center animate-bounce">
             <i class="fas fa-chevron-up text-gray-400"></i>
-            <span class="text-xs text-gray-300 mt-1">Swipe up to open</span>
+            <span class="text-xs text-gray-300 mt-1">Upar Swipe Karo</span>
         </div>
     </div>
 
@@ -105,46 +110,14 @@
     <div id="control-center" class="fixed top-0 left-0 right-0 min-h-[80vh] glass-panel z-50 rounded-b-[40px] transform -translate-y-full p-6 flex flex-col gap-5 pt-16 shadow-2xl">
         <div class="flex justify-between items-center px-2">
             <h2 class="text-2xl font-bold">Control Center</h2>
-            <button onclick="toggleControlCenter()" class="text-xs bg-white/10 px-3 py-1.5 rounded-full uppercase tracking-wider font-bold">Close</button>
+            <button onclick="toggleControlCenter()" class="text-xs bg-white/10 px-3 py-1.5 rounded-full uppercase tracking-wider font-bold">Band Karo</button>
         </div>
-        
         <div class="grid grid-cols-2 gap-4">
-            <div onclick="toggleTorch()" id="btn-torch" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-3 cursor-pointer active:scale-95 transition">
-                <i class="fas fa-flashlight text-2xl"></i>
-                <span class="font-medium">Torch</span>
-            </div>
-            <div onclick="toggleFullScreen()" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-3 cursor-pointer active:scale-95 transition">
-                <i class="fas fa-expand text-2xl"></i>
-                <span class="font-medium">Full Screen</span>
-            </div>
-            <div onclick="toggleRotation()" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-3 cursor-pointer active:scale-95 transition">
-                <i class="fas fa-sync-alt text-2xl"></i>
-                <span class="font-medium">Rotate</span>
-            </div>
-            <div class="bg-[#333] p-4 rounded-2xl flex flex-col justify-center gap-1">
-                <span class="text-xs text-gray-400 uppercase">Boss Mode</span>
-                <span class="font-bold text-green-400">Active</span>
-            </div>
+            <div onclick="toggleTorch()" id="btn-torch" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-3 cursor-pointer active:scale-95 transition"><i class="fas fa-flashlight text-2xl"></i><span class="font-medium">Torch</span></div>
+            <div onclick="toggleFullScreen()" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-3 cursor-pointer active:scale-95 transition"><i class="fas fa-expand text-2xl"></i><span class="font-medium">Full Screen</span></div>
+            <div onclick="toggleRotation()" class="bg-[#333] p-4 rounded-2xl flex flex-col gap-3 cursor-pointer active:scale-95 transition"><i class="fas fa-sync-alt text-2xl"></i><span class="font-medium">Ghumao</span></div>
+            <div class="bg-[#333] p-4 rounded-2xl flex flex-col justify-center gap-1"><span class="text-xs text-gray-400 uppercase">System</span><span class="font-bold text-green-400">Stable</span></div>
         </div>
-
-        <!-- Notifications -->
-        <div class="bg-[#2a2a2a] rounded-2xl p-4">
-            <h3 class="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider flex justify-between">
-                Updates <span class="bg-red-600 text-white text-[9px] px-1.5 py-0.5 rounded">2</span>
-            </h3>
-            <div class="flex flex-col gap-3">
-                <div class="flex gap-3 items-center p-2 bg-[#333] rounded-lg">
-                    <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center"><i class="fas fa-shopping-bag text-xs"></i></div>
-                    <div><h4 class="text-xs font-bold">DigitMart Offer</h4><p class="text-[10px] text-gray-400">30% Off on Headphones</p></div>
-                </div>
-                <div class="flex gap-3 items-center p-2 bg-[#333] rounded-lg">
-                    <div class="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center"><i class="fas fa-system-update text-xs"></i></div>
-                    <div><h4 class="text-xs font-bold">System</h4><p class="text-[10px] text-gray-400">DigitPhone OS 2.0 Installed</p></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Wallpapers -->
         <div>
             <h3 class="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider ml-1">Wallpaper</h3>
             <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
@@ -157,16 +130,14 @@
 
     <!-- 6. MAIN HOME SCREEN -->
     <main class="relative z-10 h-full flex flex-col pt-2">
-        <!-- Google Search -->
         <div class="mx-4 mb-4 z-30">
             <div class="glass rounded-full px-5 py-3 flex items-center gap-3 shadow-lg">
                 <i class="fab fa-google text-white/90 text-xl"></i>
-                <input type="text" id="search-input" placeholder="Search..." class="bg-transparent border-none outline-none text-white placeholder-white/70 w-full font-medium text-lg" onkeydown="if(event.key === 'Enter') executeSearch()">
+                <input type="text" id="search-input" placeholder="Search Web..." class="bg-transparent border-none outline-none text-white placeholder-white/70 w-full font-medium text-lg" onkeydown="if(event.key === 'Enter') executeSearch()">
                 <i class="fas fa-microphone text-white/90"></i>
             </div>
         </div>
 
-        <!-- Ad Widget (Full Width) -->
         <div class="mx-4 mb-4 z-20">
             <div id="ad-widget" class="w-full h-44 rounded-[22px] relative overflow-hidden shadow-2xl group cursor-pointer transform transition active:scale-[0.98] border border-white/10" onclick="openAdLink()">
                 <img id="ad-img" src="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700">
@@ -177,7 +148,6 @@
             </div>
         </div>
 
-        <!-- Apps Grid -->
         <div class="app-grid" id="app-container">
             <!-- Apps Injected Here -->
         </div>
@@ -185,15 +155,58 @@
 
     <!-- 7. DOCK -->
     <div class="fixed bottom-6 left-4 right-4 h-24 glass-dock rounded-[32px] flex justify-around items-center px-2 z-40 max-w-2xl mx-auto shadow-2xl border border-white/10">
-        <div onclick="openApp('dialer')" class="app-icon w-16 h-16 rounded-2xl flex items-center justify-center bg-green-500 cursor-pointer text-3xl shadow-lg shadow-green-500/30"><i class="fas fa-phone text-white"></i></div>
-        <div onclick="openApp('whatsapp')" class="app-icon w-16 h-16 rounded-2xl flex items-center justify-center bg-white cursor-pointer relative shadow-lg"><div class="absolute inset-0 flex items-center justify-center bg-[#25D366] text-4xl"><i class="fab fa-whatsapp text-white"></i></div></div>
-        <div onclick="toggleControlCenter()" class="app-icon w-16 h-16 rounded-2xl flex items-center justify-center bg-[#333] cursor-pointer text-3xl shadow-lg border border-white/10"><i class="fas fa-cog text-white"></i></div>
-        <div onclick="openApp('notes')" class="app-icon w-16 h-16 rounded-2xl flex items-center justify-center bg-yellow-400 cursor-pointer text-3xl shadow-lg shadow-yellow-500/30"><i class="fas fa-sticky-note text-white"></i></div>
+        <div onclick="openApp('dialer')" class="app-icon-wrapper w-16 h-16 rounded-2xl flex items-center justify-center bg-green-500 cursor-pointer text-3xl shadow-lg"><i class="fas fa-phone text-white"></i></div>
+        <div onclick="openApp('whatsapp')" class="app-icon-wrapper w-16 h-16 rounded-2xl flex items-center justify-center bg-white cursor-pointer relative shadow-lg"><div class="absolute inset-0 flex items-center justify-center bg-[#25D366] text-4xl"><i class="fab fa-whatsapp text-white"></i></div></div>
+        <div onclick="openApp('store')" class="app-icon-wrapper w-16 h-16 rounded-2xl flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-700 cursor-pointer text-3xl shadow-lg relative border border-white/10">
+            <i class="fas fa-shapes text-white text-2xl"></i>
+        </div>
+        <div onclick="openApp('notes')" class="app-icon-wrapper w-16 h-16 rounded-2xl flex items-center justify-center bg-yellow-400 cursor-pointer text-3xl shadow-lg"><i class="fas fa-sticky-note text-white"></i></div>
     </div>
 
     <!-- === APPS === -->
 
-    <!-- ORINA (RagmyAI + Protection) -->
+    <!-- DIGIT STORE -->
+    <div id="app-store" class="app-modal fixed inset-0 z-[60] bg-[#000] flex flex-col text-white">
+        <div class="px-5 py-4 bg-[#1c1c1e]/90 backdrop-blur-md border-b border-white/10 flex justify-between items-center sticky top-0 z-20">
+            <div>
+                <h2 class="text-2xl font-bold tracking-tight">Digit Store</h2>
+                <p class="text-xs text-gray-400 font-medium">Apps & Tools</p>
+            </div>
+            <button onclick="closeAllApps()" class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center border border-white/10"><i class="fas fa-times text-gray-300"></i></button>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-5 pb-20">
+            <div class="w-full h-32 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mb-6 flex items-center px-6 relative overflow-hidden">
+                <div class="absolute right-0 top-0 bottom-0 w-32 bg-white/10 skew-x-12 transform translate-x-10"></div>
+                <div>
+                    <h3 class="text-xl font-bold">Create Your App</h3>
+                    <p class="text-xs text-blue-100 mb-3 opacity-90">Link any website instantly.</p>
+                    <button onclick="document.getElementById('create-section').scrollIntoView({behavior:'smooth'})" class="bg-white text-blue-600 text-xs font-bold px-4 py-2 rounded-full shadow-lg">Try Now</button>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-sm font-bold text-gray-300 uppercase tracking-wider">Essential Tools</h3>
+            </div>
+            <div id="store-grid" class="grid grid-cols-3 gap-3 mb-8"></div>
+
+            <div id="create-section" class="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5">
+                <h3 class="text-sm font-bold text-gray-300 uppercase mb-4 flex items-center gap-2"><i class="fas fa-plus-circle text-blue-500"></i> Add Custom App</h3>
+                <div class="space-y-3">
+                    <input type="text" id="custom-app-name" class="store-input" placeholder="App Name (e.g. My Shop)">
+                    <input type="text" id="custom-app-url" class="store-input" placeholder="URL (https://...)">
+                    <div class="flex gap-2">
+                        <input type="text" id="custom-app-icon" class="store-input mb-0" placeholder="Icon (e.g. fa-star)">
+                        <button onclick="createCustomApp()" class="bg-blue-600 px-6 rounded-xl font-bold text-sm flex items-center justify-center"><i class="fas fa-download"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8 text-gray-500 text-xs">Secure • Fast • Light</div>
+        </div>
+    </div>
+
+    <!-- ORINA AI -->
     <div id="app-orina" class="app-modal fixed inset-0 z-[80] bg-black flex flex-col text-black">
         <div class="h-14 flex items-center justify-between px-4 bg-white border-b border-gray-300 relative z-50">
             <span onclick="closeAllApps()" class="text-blue-600 font-medium cursor-pointer flex items-center gap-1 text-lg"><i class="fas fa-chevron-left"></i> Back</span>
@@ -202,16 +215,15 @@
         </div>
         <div class="flex-1 w-full h-full overflow-hidden relative bg-black">
             <iframe src="https://chat.ragmyai.com/dd520ac9-7820-4622-84be-04cacfa57c77" class="w-full h-full border-none bg-black" allow="microphone"></iframe>
-            <!-- Protection Layers -->
             <div class="absolute top-0 left-0 w-full h-[85%] z-40 bg-transparent"></div>
             <div class="absolute bottom-[60px] left-0 w-full h-[90px] bg-black z-40"></div>
         </div>
     </div>
 
-    <!-- DIALER (iPhone Style) -->
+    <!-- DIALER -->
     <div id="app-dialer" class="app-modal fixed inset-0 z-[60] bg-black flex flex-col pb-8 text-white">
         <div class="flex-1 flex flex-col pt-16 justify-center">
-            <div id="dialer-display" class="text-5xl font-light mb-10 h-16 text-center w-full px-4 truncate text-white"></div>
+            <div id="dialer-display" class="text-5xl font-light mb-10 h-16 text-center w-full px-4 truncate tracking-wider text-white"></div>
             <div class="grid grid-cols-3 gap-x-6 gap-y-6 px-8 mb-10 max-w-sm mx-auto w-full justify-items-center">
                 <div class="dial-key" onclick="dial('1')"><span class="dial-num">1</span></div>
                 <div class="dial-key" onclick="dial('2')"><span class="dial-num">2</span></div>
@@ -301,13 +313,21 @@
     </div>
 
     <script>
-        // CONFIG
-        const ads = [
-            { title: "DigitMart Sale", img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=800", link: "https://mybillbook.in/store/digitmart" },
-            { title: "Mobile Repair", img: "https://images.unsplash.com/photo-1581092921461-eab62e97a783?q=80&w=800", link: "#" }
+        // --- 1. DATABASE ---
+        const storeAppsDatabase = [
+            { name: 'IFSC Finder', icon: 'fa-university', color: 'bg-indigo-600', type: 'link', url: 'https://cleartax.in/ifsc-code/' },
+            { name: 'Speed Post', icon: 'fa-shipping-fast', color: 'bg-red-600', type: 'link', url: 'https://www.indiapost.gov.in/' },
+            { name: 'Aadhaar', icon: 'fa-fingerprint', color: 'bg-orange-500', type: 'link', url: 'https://myaadhaar.uidai.gov.in/' },
+            { name: 'WhatsApp Web', icon: 'fa-whatsapp', color: 'bg-green-500', type: 'link', url: 'https://web.whatsapp.com' },
+            { name: 'Speed Test', icon: 'fa-tachometer-alt', color: 'bg-black', type: 'link', url: 'https://fast.com' },
+            { name: 'Converter', icon: 'fa-exchange-alt', color: 'bg-blue-500', type: 'link', url: 'https://www.unitconverters.net/' },
+            { name: 'Instagram', icon: 'fa-instagram', color: 'bg-gradient-to-tr from-yellow-400 to-purple-600', type: 'link', url: 'https://instagram.com' },
+            { name: 'YouTube', icon: 'fa-youtube', color: 'bg-white', iconColor: 'text-red-600', type: 'link', url: 'https://youtube.com' },
+            { name: 'PDF Tools', icon: 'fa-file-pdf', color: 'bg-red-500', type: 'link', url: 'https://ilovepdf.com' },
         ];
 
-        const apps = [
+        // --- 2. INITIAL APPS ---
+        const defaultApps = [
             { name: 'ShopBook', icon: 'fa-receipt', color: 'bg-gradient-to-br from-orange-500 to-red-600', type: 'link', url: 'https://digitsync.github.io/DigitBook/' },
             { name: 'Typing', icon: 'fa-keyboard', color: 'bg-gradient-to-br from-emerald-500 to-green-700', type: 'link', url: 'https://digitsync.github.io/Typing-master-Pro/' },
             { name: 'QRCode', icon: 'fa-qrcode', color: 'bg-gradient-to-br from-gray-800 to-black', type: 'link', url: 'https://digitsync.github.io/Code-Generator/' },
@@ -316,6 +336,15 @@
             { name: 'DigitMart', icon: 'fa-store', color: 'bg-blue-600', type: 'link', url: 'https://mybillbook.in/store/digitmart' },
         ];
 
+        let installedApps = JSON.parse(localStorage.getItem('digitPhoneApps')) || defaultApps;
+
+        // Ads
+        const ads = [
+            { title: "DigitMart Sale", sub: "50% Off Accessories", img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=800", link: "https://mybillbook.in/store/digitmart" },
+            { title: "Mobile Repair", sub: "Expert Service", img: "https://images.unsplash.com/photo-1581092921461-eab62e97a783?q=80&w=800", link: "#" }
+        ];
+
+        // WhatsApp Contacts
         const contacts = [
             { name: 'Orina (AI Assistant)', time: 'Active', msg: 'Tap to chat with AI...', color: 'bg-gradient-to-tr from-indigo-500 to-purple-600', icon: 'fa-sparkles', action: 'openOrina' },
             { name: 'Rouf (Boss)', time: 'Online', msg: 'Call me!', color: 'bg-indigo-600', icon: 'fa-user', url: 'https://wa.me/919957189963' },
@@ -328,44 +357,109 @@
             { name: 'Pinterest', time: 'Fri', msg: 'Pins', color: 'bg-red-600', icon: 'fa-pinterest', isFab: true, url: 'https://pin.it/35x1Igr0V' },
         ];
 
-        // --- BOOT LOGIC ---
+        // --- FUNCTIONS ---
         window.onload = function() {
             setTimeout(() => {
                 document.getElementById('boot-screen').style.opacity = '0';
-                setTimeout(() => { document.getElementById('boot-screen').style.display = 'none'; }, 800);
-            }, 2500);
+                setTimeout(() => { 
+                    document.getElementById('boot-screen').style.display = 'none'; 
+                    setTimeout(() => {
+                        const lock = document.getElementById('lock-screen');
+                        if (!lock.classList.contains('unlocked')) unlockPhone();
+                    }, 2000);
+                }, 500);
+            }, 500);
+            renderApps(); renderContacts(); renderStore();
         };
 
-        function unlockPhone() {
-            document.getElementById('lock-screen').classList.add('unlocked');
+        function unlockPhone() { document.getElementById('lock-screen').classList.add('unlocked'); }
+
+        function saveApps() { localStorage.setItem('digitPhoneApps', JSON.stringify(installedApps)); renderApps(); renderStore(); }
+
+        function installApp(app) {
+            if (!installedApps.some(a => a.name === app.name)) {
+                installedApps.push(app);
+                saveApps();
+                alert(app.name + " installed!");
+            } else {
+                handleAppClick(app);
+                closeAllApps();
+            }
         }
 
-        // --- RENDER ---
+        function uninstallApp(appName) {
+            if (appName === 'ShopBook' || appName === 'DigitAI') { alert("System App cannot be removed."); return; }
+            installedApps = installedApps.filter(a => a.name !== appName);
+            saveApps();
+        }
+
+        // --- STORE ACTIONS (FIXED) ---
+        function installStoreApp(index) { installApp(storeAppsDatabase[index]); }
+        function openStoreApp(index) { handleAppClick(storeAppsDatabase[index]); }
+
+        function createCustomApp() {
+            const name = document.getElementById('custom-app-name').value;
+            const url = document.getElementById('custom-app-url').value;
+            const icon = document.getElementById('custom-app-icon').value;
+            
+            if(!name || !url) { alert("Please fill Name and URL"); return; }
+            
+            const newApp = { name: name, url: url, icon: icon || 'fa-globe', color: 'bg-gray-800', type: 'link' };
+            installApp(newApp);
+            document.getElementById('custom-app-name').value = '';
+            document.getElementById('custom-app-url').value = '';
+            alert("App Created!");
+        }
+
+        // --- RENDERING ---
         function renderApps() {
             const container = document.getElementById('app-container');
-            apps.forEach(app => {
+            const adHTML = document.getElementById('ad-widget') ? '' : ''; 
+            container.innerHTML = '';
+            
+            installedApps.forEach(app => {
                 const div = document.createElement('div');
-                div.className = 'flex flex-col items-center gap-2 group cursor-pointer active:scale-95 transition-transform';
+                div.className = 'flex flex-col items-center gap-2 group cursor-pointer app-icon-wrapper';
                 div.onclick = () => handleAppClick(app);
+                
+                const iconClass = app.icon.startsWith('fa-') ? `fas ${app.icon}` : 'fas fa-globe';
+                const iconColor = app.iconColor || 'text-white';
+                
                 div.innerHTML = `
-                    <div class="app-icon w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center ${app.color} text-3xl relative overflow-hidden shadow-lg border border-white/10">
-                        <i class="fas ${app.icon} ${app.icon.includes('fa-brands') ? '' : 'fab'} ${app.icon} ${app.iconColor || 'text-white'}"></i>
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center ${app.color} text-3xl relative overflow-hidden shadow-lg border border-white/10">
+                        <i class="${iconClass} ${app.icon.includes('fa-brands') ? '' : 'fab'} ${iconColor}"></i>
                     </div>
-                    <span class="text-xs font-medium drop-shadow-md text-center text-white tracking-wide">${app.name}</span>
+                    <span class="text-xs font-medium drop-shadow-md text-center text-white tracking-wide truncate w-full">${app.name}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderStore() {
+            const container = document.getElementById('store-grid');
+            container.innerHTML = '';
+            storeAppsDatabase.forEach((app, index) => {
+                const isInstalled = installedApps.some(a => a.name === app.name);
+                const btnText = isInstalled ? 'Open' : 'Get';
+                const btnClass = isInstalled ? 'btn-open' : 'btn-get';
+                // Index-based calls for 100% safety
+                const action = isInstalled ? `openStoreApp(${index})` : `installStoreApp(${index})`;
+
+                const div = document.createElement('div');
+                div.className = 'store-card';
+                div.innerHTML = `
+                    <div class="store-icon ${app.color} text-white"><i class="fas ${app.icon}"></i></div>
+                    <h4 class="font-bold text-xs text-center truncate w-full mb-2">${app.name}</h4>
+                    <button onclick="${action}" class="store-btn ${btnClass}">${btnText}</button>
                 `;
                 container.appendChild(div);
             });
         }
 
         function handleAppClick(app) {
-            if (app.name === 'ShopBook') {
-                toggleFullScreen();
-                window.open(app.url, '_blank');
-            } else if (app.type === 'link') {
-                window.open(app.url, '_blank');
-            } else {
-                openApp(app.id);
-            }
+            if (app.name === 'ShopBook') { toggleFullScreen(); window.open(app.url, '_blank'); } 
+            else if (app.type === 'link') { window.open(app.url, '_blank'); } 
+            else { openApp(app.id); }
         }
 
         function renderContacts() {
@@ -375,8 +469,7 @@
                 const iconType = c.isFab ? 'fab' : 'fas';
                 const div = document.createElement('div');
                 div.className = 'wa-item flex items-center gap-4 p-4 cursor-pointer border-b border-[#202c33] active:bg-[#202c33] transition-colors';
-                if (c.action === 'openOrina') { div.onclick = () => openApp('orina'); } 
-                else { div.onclick = () => window.open(c.url, '_blank'); }
+                if (c.action === 'openOrina') { div.onclick = () => openApp('orina'); } else { div.onclick = () => window.open(c.url, '_blank'); }
                 div.innerHTML = `
                     <div class="w-12 h-12 rounded-full ${c.color} flex items-center justify-center text-white text-xl flex-shrink-0">
                         <i class="${iconType} ${c.icon} ${c.iconColor || 'text-white'}"></i>
@@ -390,20 +483,17 @@
             });
         }
 
-        // --- SYSTEM ---
-        // Calculator
+        // --- STANDARD FUNCTIONS ---
         let cVal=''; function calcInput(v){cVal+=v;document.getElementById('calc-display').innerText=cVal;} function calcClear(){cVal='';document.getElementById('calc-display').innerText='0';document.getElementById('calc-history').innerText='';} function calcDel(){cVal=cVal.slice(0,-1);document.getElementById('calc-display').innerText=cVal||'0';} function calcResult(){try{document.getElementById('calc-history').innerText=cVal+' =';cVal=eval(cVal).toString();}catch{cVal='Error';}document.getElementById('calc-display').innerText=cVal;}
         function calcGST(r,m){try{let b=parseFloat(eval(cVal))||0;let f=m==='add'?b+(b*r/100):b/(1+r/100);cVal=f.toFixed(2);document.getElementById('calc-history').innerText=`${b} ${m==='add'?'+':'-'} ${r}% GST`;document.getElementById('calc-display').innerText=cVal;}catch{cVal='Error';}}
         function calcCustomGST(m){let r=prompt("GST %:");if(r&&!isNaN(r))calcGST(parseFloat(r),m);}
 
-        // Notes
         function loadNotes(){document.getElementById('notes-area').value=localStorage.getItem('digitNotes')||'';} function saveNotes(){localStorage.setItem('digitNotes',document.getElementById('notes-area').value);closeAllApps();}
 
-        // Dialer
         let dNum=""; function dial(k){dNum+=k;document.getElementById('dialer-display').innerText=dNum;} function dialBackspace(){dNum=dNum.slice(0,-1);document.getElementById('dialer-display').innerText=dNum;} function makeCall(){if(dNum)window.open(`tel:${dNum}`,'_self');}
         function waDirectMsgFromDialer(){if(dNum)window.open(`https://wa.me/${dNum}`,'_blank');}
+        function waDirectMsg(){const n=document.getElementById('wa-direct-input').value;if(n)window.open(`https://wa.me/${n}`,'_blank');}
 
-        // Actions
         function toggleTorch(){
             const t = document.getElementById('torch-overlay');
             const b = document.getElementById('btn-torch');
@@ -422,6 +512,7 @@
             if(id === 'orina') { document.getElementById('app-whatsapp').classList.remove('active'); }
             document.getElementById(`app-${id}`).classList.add('active');
             if(id==='notes') loadNotes();
+            if(id==='store') renderStore();
         } 
         function closeAllApps(){document.querySelectorAll('.app-modal').forEach(e=>e.classList.remove('active'));} 
         function toggleControlCenter(){ document.getElementById('control-center').classList.toggle('-translate-y-full'); } 
@@ -431,14 +522,13 @@
             const time = n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
             document.getElementById('clock-display').innerText=time;
             document.getElementById('lock-time').innerText=time;
-            document.getElementById('date-display').innerText=n.toLocaleDateString([],{weekday:'short',day:'numeric'});
             document.getElementById('lock-date').innerText=n.toLocaleDateString([],{weekday:'long', month:'long', day:'numeric'});
         } 
         function setWallpaper(u){document.getElementById('wallpaper-layer').style.backgroundImage=`url('${u}')`;} function executeSearch(){const q=document.getElementById('search-input').value;if(q)window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`,'_blank');}
 
         let adIdx=0; function rotateAds(){adIdx=(adIdx+1)%ads.length;document.getElementById('ad-img').src=ads[adIdx].img;document.getElementById('ad-title').innerText=ads[adIdx].title;} function openAdLink(){window.open(ads[adIdx].link,'_blank');}
 
-        renderApps(); renderContacts(); setInterval(rotateAds,4000); setInterval(updateClock,1000); updateClock();
+        setInterval(rotateAds,4000); setInterval(updateClock,1000); updateClock();
     </script>
 </body>
 </html>
