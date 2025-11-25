@@ -1,4 +1,4 @@
-<!-- === DIGITPHONE OS: SUPER OVERLAY START === -->
+
 <div id="digit-os-root">
 
     <!-- LIBRARIES -->
@@ -11,20 +11,10 @@
     <style>
         /* Forced Overlay to Block Blogger */
         #digit-os-root {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 2147483647; /* Max possible Z-Index */
-            background-color: #000000;
-            overflow: hidden;
-            font-family: 'Inter', sans-serif;
-            color: white;
-            margin: 0;
-            padding: 0;
-            pointer-events: auto !important; /* Force Touch Events */
-            touch-action: auto !important;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 2147483647; background-color: #000000; overflow: hidden;
+            font-family: 'Inter', sans-serif; color: white; margin: 0; padding: 0;
+            pointer-events: auto !important; touch-action: auto !important;
         }
 
         /* UI Components */
@@ -33,6 +23,7 @@
         .glass-panel { background: rgba(20, 20, 20, 0.98); backdrop-filter: blur(30px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .app-icon-wrapper:active { transform: scale(0.9); transition: 0.1s; }
         
+        /* Modals */
         .app-modal { 
             position: absolute; inset: 0; z-index: 100; background: #000; 
             transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
@@ -46,29 +37,25 @@
         }
         #control-center.open { transform: translateY(0); }
 
-        /* Grid & Scroll */
+        /* Grid */
         .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px 10px; padding: 0 20px 20px 20px; overflow-y: auto; max-height: 65vh; padding-bottom: 140px; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
 
-        /* Torch Overlay */
-        #torch-overlay { 
-            display: none;
-            position: absolute; inset: 0; z-index: 300; 
-            background: white; mix-blend-mode: normal;
-        }
+        /* Store & Torch */
+        #torch-overlay { display: none; position: absolute; inset: 0; z-index: 300; background: white; mix-blend-mode: normal; }
         #torch-overlay.active { display: block; pointer-events: auto; cursor: pointer; }
 
-        /* Store UI */
         .store-card { background: #2c2c2e; border-radius: 1rem; padding: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; border: 1px solid rgba(255,255,255,0.1); }
         .play-list-item { display: flex; items-center gap: 1rem; padding: 0.75rem; margin: 0 1rem 0.5rem 1rem; border-radius: 0.75rem; transition: background-color 0.2s; border-bottom: 1px solid #333; }
         .play-list-item:active { background-color: #303134; }
         .store-btn { padding: 6px 16px; border-radius: 99px; font-size: 12px; font-weight: bold; min-width: 80px; text-align: center; }
-        .btn-install { background: #00875F; color: white; } /* Green for Install */
-        .btn-uninstall { background: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; } /* Red Outline for Uninstall */
+        .btn-install { background: #00875F; color: white; } 
+        .btn-uninstall { background: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; } 
         
-        /* Dialer Keys */
         .dial-key { @apply w-20 h-20 rounded-full bg-[#333] flex flex-col items-center justify-center active:bg-[#555] transition-colors cursor-pointer text-white; }
         .dial-num { @apply text-4xl font-normal; }
+        
+        .store-input { @apply w-full bg-[#303134] text-white p-3 rounded-xl border border-gray-600 focus:border-green-500 outline-none text-sm mb-2; }
     </style>
 
     <div class="os-body" id="os-container">
@@ -148,9 +135,8 @@
 
         <!-- === APPS === -->
 
-        <!-- DIGIT STORE (Fix: Install/Uninstall Logic) -->
+        <!-- APP STORE -->
         <div id="app-store" class="app-modal bg-[#131314] text-white" style="font-family: 'Google Sans', sans-serif;">
-            <!-- Header -->
             <div class="flex items-center gap-3 p-4 mt-2 bg-[#131314] border-b border-white/10">
                 <button onclick="closeAllApps()" class="text-gray-400"><i class="fas fa-arrow-left text-xl"></i></button>
                 <span class="text-lg font-bold">Google Play</span>
@@ -167,26 +153,22 @@
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center mb-2 px-4">
-                    <h3 class="text-lg font-bold">Suggested for you</h3>
-                </div>
+                <div class="flex justify-between items-center mb-2 px-4"><h3 class="text-lg font-bold">Available Apps</h3></div>
+                <div id="store-list" class="flex flex-col"></div>
 
-                <div id="store-list" class="flex flex-col">
-                    <!-- List Items Injected Here -->
-                </div>
-
-                <!-- Create Custom App -->
+                <!-- Create Custom App (Add to Store) -->
                 <div class="mt-8 p-4 bg-[#303134] rounded-xl border border-white/10 mx-4">
-                    <h3 class="text-lg font-bold mb-3">Create Custom App</h3>
-                    <input type="text" id="custom-app-name" class="w-full bg-[#131314] p-3 rounded-lg mb-2 outline-none" placeholder="App Name">
-                    <input type="text" id="custom-app-url" class="w-full bg-[#131314] p-3 rounded-lg mb-2 outline-none" placeholder="https://example.com">
-                    <button onclick="createCustomApp()" class="w-full bg-[#00875F] text-white font-bold py-3 rounded-full mt-2">Create & Install</button>
+                    <h3 class="text-lg font-bold mb-3">Publish Your App</h3>
+                    <input type="text" id="custom-app-name" class="store-input" placeholder="App Name">
+                    <input type="text" id="custom-app-url" class="store-input" placeholder="URL (https://...)">
+                    <input type="text" id="custom-app-icon" class="store-input" placeholder="Icon (fa-star)">
+                    <button onclick="createCustomApp()" class="w-full bg-[#00875F] text-white font-bold py-3 rounded-full mt-2">Add to Store</button>
                 </div>
                 <div class="h-20"></div>
             </div>
         </div>
 
-        <!-- ORINA AI (Secure) -->
+        <!-- ORINA AI -->
         <div id="app-orina" class="app-modal bg-black text-black" style="z-index: 200;">
             <div class="h-14 flex items-center justify-between px-4 bg-white border-b border-gray-300 relative z-50">
                 <span onclick="closeAllApps()" class="text-blue-600 font-medium cursor-pointer flex items-center gap-1 text-lg"><i class="fas fa-chevron-left"></i> Back</span>
@@ -226,7 +208,7 @@
             <div onclick="closeAllApps()" class="h-14 w-full flex items-center justify-center cursor-pointer mt-auto bg-black"><div class="w-36 h-1.5 bg-white rounded-full"></div></div>
         </div>
 
-        <!-- WHATSAPP (All Contacts Restored) -->
+        <!-- WHATSAPP -->
         <div id="app-whatsapp" class="app-modal bg-[#0b141a] flex flex-col text-white">
             <div class="px-4 py-4 bg-[#202c33] flex justify-between items-center shadow-md z-10">
                 <span class="text-2xl font-bold text-gray-300">WhatsApp</span>
@@ -290,15 +272,14 @@
     </div>
 
     <script>
-        // --- FORCE ENABLE TOUCH ON BLOGGER ---
-        // Blogger sometimes overrides body scroll/touch. We reset it.
+        // Force touch events for Blogger
         document.body.style.overflow = 'hidden';
         document.body.style.height = '100%';
         document.documentElement.style.overflow = 'hidden';
         document.documentElement.style.height = '100%';
 
-        // --- 1. DATABASE ---
-        const storeAppsDatabase = [
+        // 1. DATABASE (All Available Apps)
+        const defaultStoreApps = [
             { name: 'IFSC Finder', icon: 'fa-university', color: 'bg-indigo-600', type: 'link', url: 'https://cleartax.in/ifsc-code/', desc: 'Find Bank Codes' },
             { name: 'Speed Post', icon: 'fa-shipping-fast', color: 'bg-red-600', type: 'link', url: 'https://www.indiapost.gov.in/', desc: 'Track India Post' },
             { name: 'Aadhaar', icon: 'fa-fingerprint', color: 'bg-orange-500', type: 'link', url: 'https://myaadhaar.uidai.gov.in/', desc: 'UIDAI Portal' },
@@ -310,8 +291,8 @@
             { name: 'PDF Tools', icon: 'fa-file-pdf', color: 'bg-red-500', type: 'link', url: 'https://ilovepdf.com', desc: 'Edit & Convert PDF' },
         ];
 
-        // --- 2. INITIAL APPS ---
-        const defaultApps = [
+        // 2. INITIAL INSTALLED APPS
+        const defaultInstalledApps = [
             { name: 'ShopBook', icon: 'fa-receipt', color: 'bg-gradient-to-br from-orange-500 to-red-600', type: 'link', url: 'https://digitsync.github.io/DigitBook/' },
             { name: 'Typing', icon: 'fa-keyboard', color: 'bg-gradient-to-br from-emerald-500 to-green-700', type: 'link', url: 'https://digitsync.github.io/Typing-master-Pro/' },
             { name: 'QRCode', icon: 'fa-qrcode', color: 'bg-gradient-to-br from-gray-800 to-black', type: 'link', url: 'https://digitsync.github.io/Code-Generator/' },
@@ -320,65 +301,72 @@
             { name: 'DigitMart', icon: 'fa-store', color: 'bg-blue-600', type: 'link', url: 'https://mybillbook.in/store/digitmart' },
         ];
 
-        let installedApps = JSON.parse(localStorage.getItem('digitPhoneApps')) || defaultApps;
+        // Load State
+        let installedApps = JSON.parse(localStorage.getItem('digitPhoneApps')) || defaultInstalledApps;
+        let storeAppsDatabase = JSON.parse(localStorage.getItem('digitStoreApps')) || defaultStoreApps;
 
-        // Ads
-        const ads = [
-            { title: "DigitMart Sale", sub: "50% Off Accessories", img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=800", link: "https://mybillbook.in/store/digitmart" }
-        ];
-
-        // WhatsApp Contacts (RESTORED)
+        const ads = [ { title: "DigitMart Sale", sub: "50% Off", img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=800", link: "https://mybillbook.in/store/digitmart" } ];
         const contacts = [
             { name: 'Orina (AI)', time: 'Now', msg: 'Chat with AI', color: 'bg-purple-600', icon: 'fa-sparkles', action: 'openOrina' },
             { name: 'Boss (Rouf)', time: 'Online', msg: 'Call me!', color: 'bg-indigo-600', icon: 'fa-user', url: 'https://wa.me/919957189963' },
             { name: 'DigitMart', time: '10:00', msg: 'Support', color: 'bg-blue-600', icon: 'fa-store', url: 'https://wa.me/message/PERTKXM4MMF2K1' },
             { name: 'Rouf (Insta)', time: 'Yesterday', msg: 'New Post', color: 'bg-pink-600', icon: 'fa-instagram', isFab: true, url: 'https://instagram.com/thedigitsync' },
-            { name: 'YouTube Channel', time: 'Tue', msg: 'New Video!', color: 'bg-red-600', icon: 'fa-youtube', isFab: true, url: 'https://youtube.com/@fearlesshacker' },
+            { name: 'YouTube', time: 'Tue', msg: 'Videos', color: 'bg-red-600', icon: 'fa-youtube', isFab: true, url: 'https://youtube.com/@fearlesshacker' },
             { name: 'Bill Book', time: 'Mon', msg: 'Invoices', color: 'bg-green-500', icon: 'fa-file-invoice-dollar', url: 'https://mybillbook.in/store/digitmart' },
             { name: 'Maps', time: 'Sun', msg: 'Location', color: 'bg-blue-500', icon: 'fa-map-marked-alt', url: 'https://maps.app.goo.gl/zsciQzhwYcU4MYUN9' },
-            { name: 'Gmail', time: 'Sat', msg: 'Mails', color: 'bg-gray-200', icon: 'fa-envelope', iconColor: 'text-red-500', url: 'mailto:thedigitsync@gmail.com' },
+            { name: 'Gmail', time: 'Sat', msg: 'Mail', color: 'bg-gray-200', icon: 'fa-envelope', iconColor: 'text-red-500', url: 'mailto:thedigitsync@gmail.com' },
             { name: 'Pinterest', time: 'Fri', msg: 'Pins', color: 'bg-red-600', icon: 'fa-pinterest', isFab: true, url: 'https://pin.it/35x1Igr0V' },
         ];
 
-        // --- INIT ---
+        // INIT
         renderApps(); renderContacts(); renderStore(); setInterval(updateClock,1000); updateClock();
 
-        // --- STORE ACTIONS (INSTALL -> UNINSTALL) ---
-        function saveApps() { localStorage.setItem('digitPhoneApps', JSON.stringify(installedApps)); renderApps(); renderStore(); }
+        // LOGIC
+        function saveState() { 
+            localStorage.setItem('digitPhoneApps', JSON.stringify(installedApps)); 
+            localStorage.setItem('digitStoreApps', JSON.stringify(storeAppsDatabase));
+            renderApps(); renderStore(); 
+        }
 
         function toggleAppInstall(index) {
             const app = storeAppsDatabase[index];
             const exists = installedApps.some(a => a.name === app.name);
             
             if (exists) {
-                // Uninstall
+                // Uninstall Logic
+                if(app.name === 'Calculator' || app.name === 'ShopBook') {
+                    alert("Cannot uninstall system app!");
+                    return;
+                }
                 installedApps = installedApps.filter(a => a.name !== app.name);
-                alert(app.name + " Uninstalled");
             } else {
-                // Install
+                // Install Logic
                 installedApps.push(app);
-                alert(app.name + " Installed! Check Home Screen.");
             }
-            saveApps();
+            saveState();
         }
 
         function createCustomApp() {
             const name = document.getElementById('custom-app-name').value;
             const url = document.getElementById('custom-app-url').value;
-            if(!name || !url) { alert("Please fill Name and URL"); return; }
+            const icon = document.getElementById('custom-app-icon').value;
+            if(!name || !url) { alert("Details needed"); return; }
             
-            const newApp = { name: name, url: url, icon: 'fa-globe', color: 'bg-gray-800', type: 'link' };
-            installedApps.push(newApp);
-            saveApps();
+            const newApp = { name: name, url: url, icon: icon || 'fa-globe', color: 'bg-gray-800', type: 'link', desc: 'Custom App' };
+            
+            // Add to Store Database (so it persists in store)
+            storeAppsDatabase.push(newApp);
+            saveState();
+            
+            alert("App added to Store. You can install it now.");
             document.getElementById('custom-app-name').value = '';
             document.getElementById('custom-app-url').value = '';
-            alert("App Created!");
         }
 
-        // --- RENDERERS ---
+        // RENDERING
         function renderApps() {
             const container = document.getElementById('app-container');
-            const adHTML = document.getElementById('ad-widget') ? '' : ''; 
+            const adHTML = document.getElementById('ad-widget') ? document.getElementById('ad-widget').outerHTML : ''; 
             container.innerHTML = '';
             
             installedApps.forEach(app => {
@@ -388,10 +376,10 @@
                 const iconClass = app.icon.startsWith('fa-') ? fas ${app.icon} : 'fas fa-globe';
                 const iconColor = app.iconColor || 'text-white';
                 div.innerHTML = `
-                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center ${app.color} text-3xl relative overflow-hidden shadow-lg border border-white/10">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center ${app.color} text-3xl relative overflow-hidden shadow-lg border border-white/10">
                         <i class="${iconClass} ${app.icon.includes('fa-brands') ? '' : 'fab'} ${iconColor}"></i>
                     </div>
-                    <span class="text-xs font-medium drop-shadow-md text-center text-white tracking-wide truncate w-full">${app.name}</span>
+                    <span class="text-xs font-medium drop-shadow-md text-center text-white truncate w-full">${app.name}</span>
                 `;
                 container.appendChild(div);
             });
@@ -404,27 +392,27 @@
                 const isInstalled = installedApps.some(a => a.name === app.name);
                 const btnText = isInstalled ? 'Uninstall' : 'Install';
                 const btnClass = isInstalled ? 'btn-uninstall' : 'btn-install';
-
+                
                 const div = document.createElement('div');
                 div.className = 'play-list-item';
+                
+                // Fallback for icon display
+                const iconClass = app.icon.startsWith('fa-') ? fas ${app.icon} : 'fas fa-globe';
+                const iconColor = app.iconColor || 'text-white';
+                const bgColor = app.color || 'bg-gray-700';
+
                 div.innerHTML = `
-                    <div class="w-12 h-12 rounded-xl ${app.color} flex items-center justify-center text-xl shadow-sm text-white">
-                        <i class="fas ${app.icon}"></i>
+                    <div class="w-12 h-12 rounded-xl ${bgColor} flex items-center justify-center text-xl text-white shadow-sm">
+                        <i class="${iconClass} ${app.icon.includes('fa-brands') ? '' : 'fab'} ${iconColor}"></i>
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1 ml-2">
                         <h4 class="text-sm font-medium text-white">${app.name}</h4>
-                        <p class="text-xs text-gray-400">${app.desc || 'Productivity'}</p>
+                        <p class="text-xs text-gray-400">${app.desc || 'App'}</p>
                     </div>
                     <button onclick="toggleAppInstall(${index})" class="store-btn ${btnClass}">${btnText}</button>
                 `;
                 container.appendChild(div);
             });
-        }
-
-        function handleAppClick(app) {
-            if (app.name === 'ShopBook') { toggleFullScreen(); window.open(app.url, '_blank'); } 
-            else if (app.type === 'link') { window.open(app.url, '_blank'); } 
-            else { openApp(app.id); }
         }
 
         function renderContacts() {
@@ -436,36 +424,41 @@
                 div.className = 'flex items-center gap-4 p-4 border-b border-gray-800 active:bg-gray-800 transition-colors cursor-pointer';
                 div.onclick = c.action === 'openOrina' ? () => openApp('orina') : () => window.open(c.url, '_blank');
                 div.innerHTML = `
-                    <div class="w-12 h-12 rounded-full ${c.color} flex items-center justify-center text-white text-xl">
-                        <i class="${iconType} ${c.icon} ${c.iconColor || 'text-white'}"></i>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex justify-between items-baseline mb-1"><span class="font-semibold text-gray-100 text-lg">${c.name}</span><span class="text-xs text-gray-500">${c.time}</span></div>
-                        <span class="text-sm text-gray-400 truncate block">${c.msg}</span>
-                    </div>
-                `;
+                    <div class="w-12 h-12 rounded-full ${c.color} flex items-center justify-center text-white text-xl"><i class="${iconType} ${c.icon} ${c.iconColor || 'text-white'}"></i></div>
+                    <div class="flex-1"><div class="flex justify-between"><span class="font-bold">${c.name}</span><span class="text-xs text-gray-500">${c.time}</span></div><span class="text-sm text-gray-400 truncate block">${c.msg}</span></div>`;
                 container.appendChild(div);
             });
         }
 
-        // --- SYSTEM ---
-        let cVal=''; function calcInput(v){cVal+=v;document.getElementById('calc-display').innerText=cVal;} function calcClear(){cVal='';document.getElementById('calc-display').innerText='0';document.getElementById('calc-history').innerText='';} function calcDel(){cVal=cVal.slice(0,-1);document.getElementById('calc-display').innerText=cVal||'0';} function calcResult(){try{document.getElementById('calc-history').innerText=cVal+' =';cVal=eval(cVal).toString();}catch{cVal='Error';}document.getElementById('calc-display').innerText=cVal;}
-        function calcGST(r,m){try{let b=parseFloat(eval(cVal))||0;let f=m==='add'?b+(b*r/100):b/(1+r/100);cVal=f.toFixed(2);document.getElementById('calc-history').innerText=${b} ${m==='add'?'+':'-'} ${r}% GST;document.getElementById('calc-display').innerText=cVal;}catch{cVal='Error';}}
-        function calcCustomGST(m){let r=prompt("GST %:");if(r&&!isNaN(r))calcGST(parseFloat(r),m);}
-        function loadNotes(){document.getElementById('notes-area').value=localStorage.getItem('digitNotes')||'';} function saveNotes(){localStorage.setItem('digitNotes',document.getElementById('notes-area').value);closeAllApps();}
-        let dNum=""; function dial(k){dNum+=k;document.getElementById('dialer-display').innerText=dNum;} function dialBackspace(){dNum=dNum.slice(0,-1);document.getElementById('dialer-display').innerText=dNum;} function makeCall(){if(dNum)window.open(tel:${dNum},'_self');}
-        function waDirectMsgFromDialer(){if(dNum)window.open(https://wa.me/${dNum},'_blank');}
+        // UTILS
+        function handleAppClick(app) {
+            if (app.name === 'ShopBook') { toggleFullScreen(); window.open(app.url, '_blank'); } 
+            else if (app.type === 'link') { window.open(app.url, '_blank'); } 
+            else { openApp(app.id); }
+        }
+
+        function openApp(id) {
+            if(id==='orina'){document.getElementById('app-whatsapp').classList.remove('active');}
+            document.getElementById(app-${id}).classList.add('active');
+            if(id==='notes') loadNotes();
+            if(id==='store') renderStore();
+        }
+        function closeAllApps(){document.querySelectorAll('.app-modal').forEach(e=>e.classList.remove('active'));} 
+        function toggleControlCenter(){ document.getElementById('control-center').classList.toggle('open'); }
         function toggleTorch(){const t=document.getElementById('torch-overlay'); t.classList.toggle('torch-active'); if(t.classList.contains('torch-active')) document.getElementById('control-center').classList.remove('open');}
         function toggleFullScreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else if(document.exitFullscreen) document.exitFullscreen(); }
         function toggleRotation(){ alert("Rotate device"); }
-        function openApp(id){ if(id==='orina'){document.getElementById('app-whatsapp').classList.remove('active');} document.getElementById(app-${id}).classList.add('active'); if(id==='notes')loadNotes(); if(id==='store')renderStore(); } 
-        function closeAllApps(){document.querySelectorAll('.app-modal').forEach(e=>e.classList.remove('active'));} 
-        function toggleControlCenter(){ document.getElementById('control-center').classList.toggle('open'); } 
-        function updateClock(){const n=new Date(); const t=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); document.getElementById('clock-display').innerText=t;} 
+        function updateClock(){const n=new Date(); document.getElementById('clock-display').innerText=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
         function setWallpaper(u){document.getElementById('wallpaper-layer').style.backgroundImage=url('${u}');}
         function executeSearch(){const q=document.getElementById('search-input').value;if(q)window.open(https://www.google.com/search?q=${encodeURIComponent(q)},'_blank');}
         function openAdLink(){window.open(ads[0].link,'_blank');}
+
+        let cVal=''; function calcInput(v){cVal+=v;document.getElementById('calc-display').innerText=cVal;} function calcClear(){cVal='';document.getElementById('calc-display').innerText='0';} function calcDel(){cVal=cVal.slice(0,-1);document.getElementById('calc-display').innerText=cVal||'0';} function calcResult(){try{cVal=eval(cVal).toString();}catch{cVal='Error';}document.getElementById('calc-display').innerText=cVal;}
+        function calcGST(r,m){try{let b=parseFloat(eval(cVal))||0;let f=m==='add'?b+(b*r/100):b/(1+r/100);cVal=f.toFixed(2);document.getElementById('calc-history').innerText=${b} ${m==='add'?'+':'-'} ${r}% GST;document.getElementById('calc-display').innerText=cVal;}catch{cVal='Error';}}
+        function calcCustomGST(m){let r=prompt("GST %:");if(r&&!isNaN(r))calcGST(parseFloat(r),m);}
+        function loadNotes(){document.getElementById('notes-area').value=localStorage.getItem('digitNotes')||'';} function saveNotes(){localStorage.setItem('digitNotes',document.getElementById('notes-area').value);closeAllApps();}
+        let dNum=""; function dial(k){dNum+=k;document.getElementById('dialer-display').innerText=dNum;} function dialBackspace(){dNum=dNum.slice(0,-1);document.getElementById('dialer-display').innerText=dNum;} function makeCall(){if(dNum)window.open(tel:${dNum},'_self');} function waDirectMsgFromDialer(){if(dNum)window.open(https://wa.me/${dNum},'_blank');}
+
+        setInterval(updateClock,1000); updateClock();
     </script>
 </div>
-<!-- === DIGITPHONE OVERLAY END === -->
-
